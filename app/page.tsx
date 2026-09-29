@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import {
   Activity,
-  ArrowRight,
+  ArrowLeft,
   CheckCircle2,
   Info,
   ShieldAlert,
@@ -58,17 +58,17 @@ const categories: Category[] = [
 ];
 
 const labels: Record<Category, string> = {
-  safe: "Safe",
-  suicidal_ideation: "Suicidal ideation",
-  active_suicide_risk: "Active suicide risk",
+  safe: "آمن",
+  suicidal_ideation: "أفكار انتحارية",
+  active_suicide_risk: "خطر انتحار فعلي",
 };
 
 const descriptions: Record<Category, string> = {
-  safe: "No suicidal thoughts or intent detected in the message.",
+  safe: "لا توجد أفكار أو نوايا انتحارية في الرسالة.",
   suicidal_ideation:
-    "Suicidal thoughts or a wish to die are expressed, without a clear plan or intent.",
+    "ترد أفكار انتحارية أو رغبة في الموت، دون خطة أو نية واضحة.",
   active_suicide_risk:
-    "A plan, intent, timing, means, preparation, or recent attempt is expressed.",
+    "ترد خطة أو نية أو توقيت أو وسيلة أو تحضير أو محاولة حديثة.",
 };
 
 const bannerTone: Record<Category, string> = {
@@ -84,9 +84,9 @@ const barTone: Record<Category, string> = {
 };
 
 const examples = [
-  "I've had a difficult week, but I'm looking forward to seeing my friends tomorrow.",
-  "Sometimes I feel like everyone would be better off without me.",
-  "I have decided to do it tonight and I already prepared everything.",
+  "مرّ أسبوع صعب، لكنني متشوّق لرؤية أصدقائي غدًا.",
+  "أشعر أحيانًا أن الجميع سيكون أفضل حالًا من دوني.",
+  "قرّرت أن أفعلها الليلة، وقد جهّزت كل شيء بالفعل.",
 ];
 
 export default function Home() {
@@ -108,10 +108,10 @@ export default function Home() {
         body: JSON.stringify({ message }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Analysis failed.");
+      if (!response.ok) throw new Error(data.error || "تعذّر إجراء التحليل.");
       setResult(data.answer);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Analysis failed.");
+      setError(err instanceof Error ? err.message : "تعذّر إجراء التحليل.");
     } finally {
       setLoading(false);
     }
@@ -127,16 +127,17 @@ export default function Home() {
           <span className="grid size-9 place-items-center rounded-xl bg-linear-to-br from-brand to-primary text-primary-foreground">
             <Activity />
           </span>
-          <span className="font-heading text-2xl font-extrabold tracking-tight">
-            سند
-          </span>
+          <span className="font-heading text-2xl font-extrabold">سند</span>
           <Badge variant="outline" className="text-muted-foreground">
-            JEV LAB
+            منصة وقائية
           </Badge>
         </div>
-        <Badge variant="secondary" className="text-muted-foreground max-sm:hidden">
+        <Badge
+          variant="secondary"
+          className="text-muted-foreground max-sm:hidden"
+        >
           <span className="size-1.5 rounded-full bg-risk-safe" />
-          Powered by Jev
+          متاحة الآن
         </Badge>
       </header>
 
@@ -145,15 +146,15 @@ export default function Home() {
       <section className="flex max-w-2xl flex-col gap-4 pt-10 pb-6">
         <Badge variant="secondary" className="w-fit text-primary">
           <Sparkles data-icon="inline-start" />
-          Safety classification demo
+          كشف مبكر من النص
         </Badge>
-        <h1 className="font-heading text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">
-          Understand the signal{" "}
-          <span className="text-primary">behind the words.</span>
+        <h1 className="font-heading text-4xl leading-[1.35] font-extrabold text-balance sm:text-5xl">
+          نقرأ الخطر في الكلمات{" "}
+          <span className="text-primary">قبل فوات الأوان.</span>
         </h1>
         <p className="max-w-lg text-muted-foreground">
-          A focused, private interface for testing how Jev classifies
-          expressions of emotional distress.
+          نحلّل الرسائل النصية للكشف المبكر عن مؤشرات التفكير في الانتحار،
+          ومساعدة المختصين على التدخّل في الوقت المناسب لإنقاذ الأرواح.
         </p>
       </section>
 
@@ -162,13 +163,13 @@ export default function Home() {
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <span className="grid size-7 place-items-center rounded-lg bg-secondary text-xs font-bold text-primary">
-                01
+                ٠١
               </span>
-              Enter a message
+              أدخل النص
             </CardTitle>
             <CardAction>
               <Badge variant="outline" className="tabular-nums">
-                {message.length} / 4,000
+                {message.length} / 4000
               </Badge>
             </CardAction>
           </CardHeader>
@@ -176,7 +177,7 @@ export default function Home() {
             <form onSubmit={analyze} className="flex flex-1 flex-col">
               <FieldGroup className="flex-1">
                 <Field data-invalid={Boolean(error)}>
-                  <FieldLabel htmlFor="message">Message</FieldLabel>
+                  <FieldLabel htmlFor="message">الرسالة</FieldLabel>
                   <Textarea
                     id="message"
                     name="message"
@@ -185,19 +186,19 @@ export default function Home() {
                       setMessage(event.target.value);
                       setExample("");
                     }}
-                    placeholder="Type or paste a message to analyze…"
+                    placeholder="اكتب أو الصق الرسالة المطلوب تحليلها…"
                     maxLength={4000}
                     aria-invalid={Boolean(error)}
                     className="field-sizing-fixed min-h-52 resize-y"
                   />
                   <FieldDescription>
-                    Only the message you enter is sent for classification.
+                    تُعالَج الرسالة على الخادم لأغراض التصنيف فقط.
                   </FieldDescription>
                   {error ? <FieldError>{error}</FieldError> : null}
                 </Field>
 
                 <FieldSet>
-                  <FieldLegend variant="label">Try an example</FieldLegend>
+                  <FieldLegend variant="label">جرّب مثالًا</FieldLegend>
                   <ToggleGroup
                     variant="outline"
                     size="sm"
@@ -210,7 +211,7 @@ export default function Home() {
                   >
                     {examples.map((_, index) => (
                       <ToggleGroupItem key={index} value={String(index)}>
-                        Example {index + 1}
+                        المثال {["١", "٢", "٣"][index]}
                       </ToggleGroupItem>
                     ))}
                   </ToggleGroup>
@@ -224,12 +225,12 @@ export default function Home() {
                   {loading ? (
                     <>
                       <Spinner data-icon="inline-start" />
-                      Analyzing…
+                      جارٍ التحليل…
                     </>
                   ) : (
                     <>
-                      Analyze message
-                      <ArrowRight data-icon="inline-end" />
+                      حلّل الرسالة
+                      <ArrowLeft data-icon="inline-end" />
                     </>
                   )}
                 </Button>
@@ -242,14 +243,14 @@ export default function Home() {
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <span className="grid size-7 place-items-center rounded-lg bg-secondary text-xs font-bold text-primary">
-                02
+                ٠٢
               </span>
-              Classification
+              التصنيف
             </CardTitle>
             <CardAction>
               <Badge variant="secondary" className="text-risk-safe">
                 <span className="size-1.5 rounded-full bg-risk-safe" />
-                LIVE
+                مباشر
               </Badge>
             </CardAction>
           </CardHeader>
@@ -260,10 +261,8 @@ export default function Home() {
                   <EmptyMedia variant="icon">
                     <Spinner />
                   </EmptyMedia>
-                  <EmptyTitle>Reading the signal…</EmptyTitle>
-                  <EmptyDescription>
-                    Jev is evaluating the message.
-                  </EmptyDescription>
+                  <EmptyTitle>جارٍ قراءة الإشارة…</EmptyTitle>
+                  <EmptyDescription>يتم تقييم النص الآن.</EmptyDescription>
                 </EmptyHeader>
               </Empty>
             ) : selected && result ? (
@@ -278,7 +277,7 @@ export default function Home() {
                       )}
                     </span>
                     <div className="flex flex-1 flex-col gap-0.5">
-                      <AlertTitle>Primary classification</AlertTitle>
+                      <AlertTitle>التصنيف الأساسي</AlertTitle>
                       <AlertDescription className="font-medium text-current">
                         {labels[selected]}
                       </AlertDescription>
@@ -325,10 +324,9 @@ export default function Home() {
                   <EmptyMedia variant="icon">
                     <ShieldAlert />
                   </EmptyMedia>
-                  <EmptyTitle>Your result will appear here</EmptyTitle>
+                  <EmptyTitle>ستظهر النتيجة هنا</EmptyTitle>
                   <EmptyDescription>
-                    Enter a message and run the analysis to see Jev&apos;s
-                    confidence across each category.
+                    أدخل رسالة ثم شغّل التحليل لعرض تقديرات النموذج لكل فئة.
                   </EmptyDescription>
                 </EmptyHeader>
               </Empty>
@@ -342,9 +340,9 @@ export default function Home() {
         <div className="flex flex-col justify-between gap-2 text-xs text-muted-foreground sm:flex-row">
           <span className="flex items-center gap-2">
             <Info />
-            This is a demonstration tool, not a clinical assessment.
+            هذه أداة مساعدة وليست تشخيصًا سريريًا.
           </span>
-          <span>Decisions API · OpenRouter</span>
+          <span>يُعالَج النص على الخادم فقط، دون تخزينه.</span>
         </div>
       </footer>
     </main>

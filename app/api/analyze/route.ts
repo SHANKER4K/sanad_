@@ -14,14 +14,20 @@ export async function POST(request: Request) {
     const message = typeof body.message === "string" ? body.message.trim() : "";
 
     if (!message) {
-      return NextResponse.json({ error: "Message is required." }, { status: 400 });
+      return NextResponse.json(
+        { error: "الرسالة مطلوبة." },
+        { status: 400 },
+      );
     }
     if (message.length > 4000) {
-      return NextResponse.json({ error: "Message is too long." }, { status: 413 });
+      return NextResponse.json(
+        { error: "الرسالة طويلة جدًا." },
+        { status: 413 },
+      );
     }
     if (!process.env.OPENROUTER_API_KEY) {
       return NextResponse.json(
-        { error: "OPENROUTER_API_KEY is not configured." },
+        { error: "مفتاح OPENROUTER_API_KEY غير مُهيّأ." },
         { status: 500 },
       );
     }
@@ -51,7 +57,7 @@ export async function POST(request: Request) {
     const data = await upstream.json();
     if (!upstream.ok) {
       return NextResponse.json(
-        { error: data?.error?.message ?? "OpenRouter request failed." },
+        { error: data?.error?.message ?? "فشل طلب التحليل." },
         { status: upstream.status },
       );
     }
@@ -61,6 +67,6 @@ export async function POST(request: Request) {
       usage: data.usage,
     });
   } catch {
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+    return NextResponse.json({ error: "طلب غير صالح." }, { status: 400 });
   }
 }

@@ -1,8 +1,10 @@
-# Jev Risk Demo (سند)
+# سند — Early Risk Detection
 
-A light-mode Next.js interface for classifying a message into `safe`,
-`suicidal_ideation`, or `active_suicide_risk` with Jev through OpenRouter. The UI is
-built with [shadcn/ui](https://ui.shadcn.com) (Base UI) on Tailwind CSS v4.
+An Arabic, right-to-left Next.js interface that reads a message and surfaces early
+signs of suicidal ideation, so trained reviewers can intervene in time. Each message is
+classified into `safe`, `suicidal_ideation`, or `active_suicide_risk` through OpenRouter.
+The UI is built with [shadcn/ui](https://ui.shadcn.com) (Base UI, RTL mode) on Tailwind
+CSS v4 and uses the Cairo typeface.
 
 ## Setup
 
@@ -12,7 +14,7 @@ Install dependencies (this project uses [bun](https://bun.sh)):
 bun install
 ```
 
-Create `.env.local` and add your OpenRouter key:
+Create `.env.local` (or `.env`) and add your OpenRouter key:
 
 ```env
 OPENROUTER_API_KEY=sk-or-your-key
