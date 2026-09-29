@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Jev Risk Demo (سند)
 
-## Getting Started
+A light-mode Next.js interface for classifying a message into `safe`,
+`suicidal_ideation`, or `active_suicide_risk` with Jev through OpenRouter. The UI is
+built with [shadcn/ui](https://ui.shadcn.com) (Base UI) on Tailwind CSS v4.
 
-First, run the development server:
+## Setup
+
+Install dependencies (this project uses [bun](https://bun.sh)):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+bun install
+```
+
+Create `.env.local` and add your OpenRouter key:
+
+```env
+OPENROUTER_API_KEY=sk-or-your-key
+```
+
+> The key is only read in the server route (`app/api/analyze/route.ts`). Never expose it
+> in a `NEXT_PUBLIC_` variable or call OpenRouter directly from the browser.
+
+Run the dev server:
+
+```bash
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How it works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `app/page.tsx` — the client UI: message form, example presets, and the classification
+  result with per-category probabilities.
+- `app/api/analyze/route.ts` — server route that validates the message and calls the
+  OpenRouter Decisions API (`typesafe/jev-1.13`) with a single `choice` question.
+- `components/ui/*` — shadcn components; theme tokens live in `app/globals.css`.
 
-## Learn More
+Add more components with:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+bunx --bun shadcn@latest add <component>
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Safety notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This is a demonstration, not a clinical assessment. Route non-safe classifications to a
+trained human reviewer, log only what you need, add authentication and rate limiting
+before deployment, and never make emergency decisions from Jev alone.
